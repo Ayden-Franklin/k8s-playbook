@@ -1,0 +1,17 @@
+- name: Install etcd
+  yum: name=etcd state=latest
+
+- name: Create etcd data directory
+  file: name={{ etcd_data_dir }} owner=etcd group=etcd state=directory
+
+- name: Create service file for etcd
+  template: src=etcd.service.j2 dest=/usr/lib/systemd/system/etcd.service
+
+- name: Create configuration file for etcd
+  template: src=etcd.conf.j2 dest=/etc/etcd/etcd.conf
+
+- name: Reload ETCD service
+  command: systemctl daemon-reload
+
+- name: Start ETCD service
+  service: name=etcd enabled=yes state=started

@@ -1,0 +1,20 @@
+[Unit]
+Description=Kube-controller-manager Service
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target
+After=kube-apiserver.service
+Requires=kube-apiserver.service
+[Service]
+Type=simple
+EnvironmentFile=-/etc/kubernetes/config
+EnvironmentFile=-/etc/kubernetes/controller-manager
+ExecStart=/usr/bin/kube-controller-manager \
+        $KUBE_LOGTOSTDERR \
+        $KUBE_LOG_LEVEL \
+        $KUBE_MASTER \
+        $KUBE_CONTROLLER_MANAGER_ARGS
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,84 @@
+# This is the default ansible 'hosts' file.
+#
+# It should live in /etc/ansible/hosts
+#
+#   - Comments begin with the '#' character
+#   - Blank lines are ignored
+#   - Groups of hosts are delimited by [header] elements
+#   - You can enter hostnames or ip addresses
+#   - A hostname/ip can be a member of multiple groups
+
+# Ex 1: Ungrouped hosts, specify before any group headers.
+
+## green.example.com
+## blue.example.com
+## 192.168.100.1
+## 192.168.100.10
+
+# Ex 2: A collection of hosts belonging to the 'webservers' group
+
+## [webservers]
+## alpha.example.org
+## beta.example.org
+## 192.168.1.100
+## 192.168.1.110
+
+# If you have multiple hosts following a pattern you can specify
+# them like this:
+
+## www[001:006].example.com
+
+# Ex 3: A collection of database servers in the 'dbservers' group
+
+## [dbservers]
+## 
+## db01.intranet.mydomain.net
+## db02.intranet.mydomain.net
+## 10.25.1.56
+## 10.25.1.57
+
+# Here's another example of host ranges, this time there are no
+# leading 0s:
+
+## db-[99:101]-node.example.com
+[master-server]
+10.0.0.11 MASTER_IP="10.0.0.11"
+[all-servers]
+10.0.0.[11:16]
+[node-servers]
+10.0.0.11 NODE_IP="10.0.0.11"
+10.0.0.12 NODE_IP="10.0.0.12"
+10.0.0.13 NODE_IP="10.0.0.13"
+10.0.0.14 NODE_IP="10.0.0.14"
+10.0.0.15 NODE_IP="10.0.0.15"
+10.0.0.16 NODE_IP="10.0.0.16"
+[etcd-servers]
+10.0.0.12 NODE_NAME=etcd1 NODE_IP="10.0.0.12"
+10.0.0.13 NODE_NAME=etcd2 NODE_IP="10.0.0.13"
+10.0.0.14 NODE_NAME=etcd3 NODE_IP="10.0.0.14"
+[etcd-server-1]
+10.0.0.12
+
+[all:vars]
+
+MASTER_IP="10.0.0.11"
+CLUSTER_DNS_SVC_IP="10.0.6.200"
+SERVICE_CLUSTER_IP="10.0.6.0/24"
+#Generated via head -c 16 /dev/urandom | od -An -t x | tr -d ' '
+BOOTSTRAP_TOKEN="a71e205461d64b282b480c5961ae13e0"
+etcd_data_dir="/data/etcd"
+ETCD_NODES="etcd1=https://10.0.0.12:2380,etcd2=https://10.0.0.13:2380,etcd3=https://10.0.0.14:2380"
+ETCD_ENDPOINTS="https://10.0.0.12:2379,https://10.0.0.13:2379,https://10.0.0.14:2379"
+
+binary_dir="/usr/local/kubernetes/kubernetes"
+
+ca_source_dir="/work/deployer/kubernetes/security"
+kube_ca_dir="/etc/kubernetes/ca"
+etcd_ca_dir="/etc/etcd/ca"
+
+docker_domain="docker.macrame.com"
+
+ansible_dir="/work/deployer/ansible/playbook"
+
+
+POD_INFRA_CONTAINER_IMAGE=docker.macrame.com/google_containers/pause-amd64:3.0

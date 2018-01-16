@@ -1,0 +1,88 @@
+- name: Copy kubernetes file to the master server
+  copy: src={{ binary_dir }}/server/bin/{{ item }} dest=/usr/bin/{{ item }} owner=root group=operation mode=0755
+  with_items:
+  - kube-apiserver
+  - kube-controller-manager
+  - kube-scheduler
+  - kubectl
+
+- name: Generate the bootstrap token file
+  template: src=token.csv.j2 dest=/etc/kubernetes/token.csv
+
+- name: Set config for kubernetes cluster
+  shell: "kubectl config set-cluster kubernetes  --certificate-authority={{ kube_ca_dir }}/ca.pem  --embed-certs=true   --server=https://{{ MASTER_IP }}:6443"
+
+- name: Set config for kubernetes admin credentials
+  shell: "kubectl config set-credentials admin  --client-certificate={{ kube_ca_dir }}/admin.pem --client-key={{ kube_ca_dir }}/admin.key --embed-certs=true"
+
+- name: Set config for kubernetes context
+  shell: "kubectl config set-context kubernetes --cluster=kubernetes --user=admin"
+
+- name: Set the default context of  kubernetes
+  shell: "kubectl config use-context kubernetes"
+
+- name: Create kubernetes configuration directory
+  file: name=/etc/kubernetes owner=root group=root state=directory recurse=true
+
+- name: Create kubernetes configuration file for kubernetes
+  template: src=config.j2 dest=/etc/kubernetes/config
+
+- name: Create kube-apiserver configuration file for kubernetes
+  template: src=apiserver.j2 dest=/etc/kubernetes/apiserver
+
+- name: Create kube-apiserver service file for kubernetes
+  copy: src=kube-apiserver.service dest=/usr/lib/systemd/system/kube-apiserver.service
+
+- name: Create kube-controller-manager configuration file for kubernetes
+  template: src=controller-manager.j2 dest=/etc/kubernetes/controller-manager
+
+- name: Create kube-controller-manager service file for kubernetes
+  copy: src=kube-controller-manager.service dest=/usr/lib/systemd/system/kube-controller-manager.service
+
+- name: Create kube-scheduler configuration file for kubernetes
+  template: src=scheduler.j2 dest=/etc/kubernetes/scheduler
+
+- name: Create kube-scheduler service file for kubernetes
+  copy: src=kube-scheduler.service dest=/usr/lib/systemd/system/kube-scheduler.service
+
+- name: Reload kubernetes service
+  command: systemctl daemon-reload
+
+- name: Start kube-apiserver service
+  service: name=kube-apiserver enabled=yes state=started
+
+- name: Start kube-controller-manager service
+  service: name=kube-controller-manager enabled=yes state=started
+
+- name: Start kube-scheduler service
+  service: name=kube-scheduler enabled=yes state=started
+
+- name: Generate the kube-proxy kubeconfig
+  shell: "kubectl config set-cluster kubernetes  --certificate-authority={{ kube_ca_dir }}/ca.pem  --embed-certs=true   --server=https://{{ MASTER_IP }}:6443  --kubeconfig={{ ca_source_dir }}/kube-proxy.kubeconfig"
+
+- name: Set config for kubernetes proxy credentials
+  shell: "kubectl config set-credentials kube-proxy  --client-certificate={{ kube_ca_dir }}/proxy.pem --client-key={{ kube_ca_dir }}/proxy.key --embed-certs=true --kubeconfig={{ ca_source_dir }}/kube-proxy.kubeconfig"
+
+- name: Set config for kubernetes context
+  shell: "kubectl config set-context default --cluster=kubernetes --user=kube-proxy --kubeconfig={{ ca_source_dir }}/kube-proxy.kubeconfig"
+
+- name: Set the default context of  kubernetes
+  shell: "kubectl config use-context default --kubeconfig={{ ca_source_dir }}/kube-proxy.kubeconfig"
+
+- name: Generate the kubelet bootstrapping kubeconfig
+  command: "kubectl config set-cluster kubernetes  --certificate-authority={{ kube_ca_dir }}/ca.pem  --embed-certs=true   --server=https://{{ MASTER_IP }}:6443  --kubeconfig={{ ca_source_dir }}/bootstrap.kubeconfig"
+
+- name: Set config for kubernetes bootstrapping credentials
+  command: "kubectl config set-credentials kubelet-bootstrap  --token={{ BOOTSTRAP_TOKEN }}  --kubeconfig={{ ca_source_dir }}/bootstrap.kubeconfig"
+
+- name: Set config for kubernetes context
+  command: "kubectl config set-context default --cluster=kubernetes --user=kubelet-bootstrap --kubeconfig={{ ca_source_dir }}/bootstrap.kubeconfig"
+
+- name: Set the default context of  kubernetes
+  command: "kubectl config use-context default --kubeconfig={{ ca_source_dir }}/bootstrap.kubeconfig"
+
+- name: Create cluster rolebinding 
+  command: "kubectl create --insecure-skip-tls-verify clusterrolebinding kubelet-bootstrap \
+  --clusterrole=system:node-bootstrapper \
+  --user=kubelet-bootstrap"
+

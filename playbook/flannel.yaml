@@ -1,0 +1,6 @@
+- hosts: etcd-server-1
+  roles:
+    - prepare_flanneld
+- hosts: node-servers
+  roles:
+    - flanneld

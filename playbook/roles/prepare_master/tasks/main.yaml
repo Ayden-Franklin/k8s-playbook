@@ -1,0 +1,35 @@
+- name: Prepare ca directory
+  file: name={{ item }} state=directory
+  with_items:
+  - "{{ kube_ca_dir }}"
+
+- name: Copy ca files
+  copy: src={{ ca_source_dir }}/{{ item }} dest={{ kube_ca_dir }}/{{ item }} force=no
+  with_items:
+  - kubernetes.pem
+  - kubernetes.key
+  - admin.pem
+  - admin.key
+  - ca.pem
+  - ca.key
+
+- name: Install tree
+  yum: name=tree state=latest
+
+- name: Install htop
+  yum: name=htop state=latest
+
+- name: Install nc
+  yum: name=nc state=latest
+
+- name: Install bind-utils
+  yum: name=bind-utils state=latest
+
+- name: Install nfs-utils
+  yum: name=nfs-utils state=latest
+
+- name: Install bridge-utils
+  yum: name=bridge-utils state=latest
+
+- name: Install traceroute
+  yum: name=traceroute state=latest

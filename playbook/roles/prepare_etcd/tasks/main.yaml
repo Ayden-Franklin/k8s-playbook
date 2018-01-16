@@ -1,0 +1,12 @@
+- name: Prepare ca directory
+  file: name={{ item }} state=directory
+  with_items:
+  - "{{ etcd_ca_dir }}"
+  - "{{ etcd_data_dir }}"
+
+- name: Copy ca files
+  copy: src={{ ca_source_dir }}/{{ item }} dest={{ etcd_ca_dir }}/{{ item }} force=no
+  with_items:
+  - etcd.pem
+  - etcd.key
+  - ca.pem

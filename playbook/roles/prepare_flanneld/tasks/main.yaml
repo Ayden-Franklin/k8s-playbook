@@ -1,0 +1,5 @@
+- name: Configure etcd for flannel
+  command: "etcdctl --debug --endpoints={{ ETCD_ENDPOINTS }}  --ca-file={{ etcd_ca_dir }}/ca.pem   --cert-file={{ etcd_ca_dir }}/etcd.pem   --key-file={{ etcd_ca_dir }}/etcd.key mkdir /flannel.docker"
+
+- name: Define the network for flannel
+  command: "etcdctl --debug --endpoints={{ ETCD_ENDPOINTS }}  --ca-file={{ etcd_ca_dir }}/ca.pem   --cert-file={{ etcd_ca_dir }}/etcd.pem   --key-file={{ etcd_ca_dir }}/etcd.key  set /flannel.docker/network/config '{\"Network\":\"10.1.0.0/16\", \"Backend\":{\"Type\":\"vxlan\"} }'"

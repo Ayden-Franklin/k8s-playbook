@@ -1,0 +1,38 @@
+- name: Install yum-utils before installing docker
+  yum: name=yum-utils state=latest
+
+- name: Add repository of yum for docker
+  command: "yum-config-manager --add-repo  https://download.docker.com/linux/centos/docker-ce.repo"
+
+- name: Update repository of yum for docker
+  command: "yum makecache fast"
+
+- name: Install docker-ce
+  yum: name=docker-ce state=latest
+
+- name: Create the operation group
+  group: name=operation
+
+- name: Create the deployer user
+  user: user=deployer group=operation groups=docker
+
+- name: Create docker configuration directory
+  file: name=/etc/docker/certs.d/{{ docker_domain }} owner=root group=root state=directory recurse=true
+
+- name: Create configuration file for docker
+  template: src=daemon.json.j2 dest=/etc/docker/daemon.json
+
+- name: Copy the ca files for docker
+  copy: src=ca.crt dest=/etc/docker/certs.d/{{ docker_domain }}/ca.crt mode=0644
+
+- name: Bridge docker and flannel
+  script: "update_docker.sh"
+
+- name: Reload docker service
+  command: systemctl daemon-reload
+
+- name: Start docker service
+  service: name=docker enabled=yes state=started
+
+- name: Change the iptables rule
+  command: "iptables -P FORWARD ACCEPT"

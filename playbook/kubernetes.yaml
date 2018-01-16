@@ -1,0 +1,6 @@
+- hosts: master-server
+  roles:
+    - kubernetes-master
+- hosts: node-servers
+  roles:
+    - kubernetes-node

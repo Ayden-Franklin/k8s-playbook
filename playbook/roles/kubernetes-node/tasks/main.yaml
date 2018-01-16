@@ -1,0 +1,47 @@
+- name: Copy kubernetes file to the node server
+  copy: src={{ binary_dir }}/server/bin/{{ item }} dest=/usr/bin/{{ item }} owner=root group=operation mode=0755
+  with_items:
+  - kube-proxy
+  - kubelet
+
+- name: Create kubernetes configuration directory
+  file: name=/etc/kubernetes owner=root group=root state=directory recurse=true
+
+- name: Create kubelet data directory
+  file: name={{ kubelet_data_dir }} owner=root group=root state=directory recurse=true
+
+- name: Copy the kube-proxy kubeconfig
+  copy: src={{ ca_source_dir }}/kube-proxy.kubeconfig dest=/etc/kubernetes/kube-proxy.kubeconfig 
+
+- name: Copy the kubelet bootstrapping kubeconfig
+  copy: src={{ ca_source_dir }}/bootstrap.kubeconfig dest=/etc/kubernetes/bootstrap.kubeconfig
+
+- name: Copy kube-proxy kubeconfig file
+  copy: src={{ ca_source_dir }}/kube-proxy.kubeconfig dest=/etc/kubernetes/kube-proxy.kubeconfig
+
+- name: Copy kubelet kubeconfig file
+  copy: src={{ ca_source_dir }}/bootstrap.kubeconfig dest=/etc/kubernetes/bootstrap.kubeconfig
+
+- name: Create kubernetes configuration file for kubernetes
+  template: src=config.j2 dest=/etc/kubernetes/config
+
+- name: Create kube-proxy configuration file for kubernetes
+  template: src=proxy.j2 dest=/etc/kubernetes/proxy
+
+- name: Create kube-proxy service file for kubernetes
+  copy: src=kube-proxy.service dest=/usr/lib/systemd/system/kube-proxy.service
+
+- name: Create kubelet configuration file for kubernetes
+  template: src=kubelet.j2 dest=/etc/kubernetes/kubelet
+
+- name: Create kubelet service file for kubernetes
+  template: src=kubelet.service.j2 dest=/usr/lib/systemd/system/kubelet.service
+
+- name: Reload kubernetes service
+  command: systemctl daemon-reload
+
+- name: Start kube-proxy service
+  service: name=kube-proxy enabled=yes state=started
+
+- name: Start kubelet service
+  service: name=kubelet enabled=yes state=started

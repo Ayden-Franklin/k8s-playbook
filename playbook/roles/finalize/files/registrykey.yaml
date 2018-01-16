@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registrykey
+  namespace: kube-system
+data:
+  .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJkb2NrZXIuY2xvdWRvbHAuY29tIjogewoJCQkiYXV0aCI6ICJZMnh2ZFdSdmJIQTZRMnh2ZFdSdmJIQWpaRzlqYTJWeSIKCQl9Cgl9Cn0=
+type: kubernetes.io/dockerconfigjson

@@ -1,0 +1,9 @@
+- hosts: master-server
+  roles:
+    - prepare_master
+- hosts: node-servers
+  roles:
+    - prepare_node
+- hosts: etcd-servers
+  roles:
+    - prepare_etcd

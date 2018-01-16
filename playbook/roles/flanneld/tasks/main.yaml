@@ -1,0 +1,8 @@
+- name: Install flannel
+  yum: name=flannel state=latest
+
+- name: Create configuration file for flannel
+  template: src=flanneld.j2 dest=/etc/sysconfig/flanneld
+
+- name: Start flanneld service
+  service: name=flanneld enabled=yes state=started

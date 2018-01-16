@@ -1,0 +1,14 @@
+- name: Define alias for kubectl
+  shell: "echo alias kc='kubectl'\n \
+         alias kcp='kubectl get po'\n \
+         alias kcd='kubectl describe po'\n \
+         alias kcdp='kubectl delete po'\n \
+         alias kce='kubectl exec -it'\n \
+         alias kcl='kubectl logs -f'\n \
+         alias kca='kubectl apply -f' >> /etc/bashrc" 
+
+- name: Create the secret for docker in namespace kube-system
+  shell: "kubectl apply -f {{ ansible_dir }}/roles/finalize/files/registrykey.yaml"
+
+- name: Approve all the node request
+  shell: "kubectl certificate approve $(kubectl get csr |  awk '{ print $1}' | tail -n +2)"
