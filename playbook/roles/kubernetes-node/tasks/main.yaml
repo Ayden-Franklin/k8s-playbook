@@ -7,9 +7,6 @@
 - name: Create kubernetes configuration directory
   file: name=/etc/kubernetes owner=root group=root state=directory recurse=true
 
-- name: Create kubelet data directory
-  file: name={{ kubelet_data_dir }} owner=root group=root state=directory recurse=true
-
 - name: Copy the kube-proxy kubeconfig
   copy: src={{ ca_source_dir }}/kube-proxy.kubeconfig dest=/etc/kubernetes/kube-proxy.kubeconfig 
 

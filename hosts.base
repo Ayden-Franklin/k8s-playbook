@@ -64,6 +64,7 @@
 MASTER_IP="10.0.0.11"
 CLUSTER_DNS_SVC_IP="10.0.6.200"
 SERVICE_CLUSTER_IP="10.0.6.0/24"
+POD_CLUSTER_IP="10.1.0.0/16"
 #Generated via head -c 16 /dev/urandom | od -An -t x | tr -d ' '
 BOOTSTRAP_TOKEN="a71e205461d64b282b480c5961ae13e0"
 etcd_data_dir="/data/etcd"

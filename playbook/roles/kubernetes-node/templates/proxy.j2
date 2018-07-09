@@ -4,4 +4,4 @@
 # defaults from config and proxy should be adequate
 
 # Add your own!
-KUBE_PROXY_ARGS="--kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig  --cluster-cidr={{ SERVICE_CLUSTER_IP }}"
+KUBE_PROXY_ARGS="--kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig  --cluster-cidr={{ POD_CLUSTER_IP }}"

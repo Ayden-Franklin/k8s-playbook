@@ -7,7 +7,7 @@ cd playbook
 
 ansible-playbook prepare.yaml
 ansible-playbook etcd.yaml
-ansible-playbook flannel.yaml
+#ansible-playbook flannel.yaml
 ansible-playbook docker.yaml
 ansible-playbook kubernetes.yaml
 ansible-playbook finalize.yaml

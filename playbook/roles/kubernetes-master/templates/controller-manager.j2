@@ -4,4 +4,4 @@
 # defaults from config and apiserver should be adequate
 
 # Add your own!
-KUBE_CONTROLLER_MANAGER_ARGS="--address=127.0.0.1 --service-cluster-ip-range={{ SERVICE_CLUSTER_IP }} --cluster-name=kubernetes --cluster-signing-cert-file={{ kube_ca_dir }}/ca.pem --cluster-signing-key-file={{ kube_ca_dir }}/ca.key  --service-account-private-key-file={{ kube_ca_dir }}/ca.key --root-ca-file={{ kube_ca_dir }}/ca.pem --leader-elect=true"
+KUBE_CONTROLLER_MANAGER_ARGS="--master=http://{{ MASTER_IP }}:8080 --address=127.0.0.1 --service-cluster-ip-range={{ SERVICE_CLUSTER_IP }} --cluster-name=kubernetes --cluster-signing-cert-file={{ kube_ca_dir }}/ca.pem --cluster-signing-key-file={{ kube_ca_dir }}/ca.key  --service-account-private-key-file={{ kube_ca_dir }}/ca.key --root-ca-file={{ kube_ca_dir }}/ca.pem --leader-elect=true --cluster-cidr={{ POD_CLUSTER_IP }}"
