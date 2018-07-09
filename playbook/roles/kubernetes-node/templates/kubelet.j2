@@ -17,6 +17,5 @@ KUBELET_CONFIG="--kubeconfig=/etc/kubernetes/kubelet.kubeconfig"
 ## pod infrastructure container
 KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image={{ POD_INFRA_CONTAINER_IMAGE }}"
 #
-KUBE_ALLOW_PRIV="--allow_privileged=true"
 ## Add your own!
-KUBELET_ARGS="--cluster-dns={{ CLUSTER_DNS_SVC_IP }} --serialize-image-pulls=false --image-gc-high-threshold=80 --image-gc-low-threshold=50 --bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig --kubeconfig=/etc/kubernetes/kubelet.kubeconfig --cert-dir={{ kube_ca_dir }} --cluster-domain=cluster.local. --hairpin-mode promiscuous-bridge"
+KUBELET_ARGS="--cluster-dns={{ CLUSTER_DNS_SVC_IP }} --serialize-image-pulls=false --image-gc-high-threshold=80 --image-gc-low-threshold=50 --bootstrap-kubeconfig=/etc/kubernetes/bootstrap.kubeconfig --kubeconfig=/etc/kubernetes/kubelet.kubeconfig --cert-dir={{ kube_ca_dir }} --cluster-domain=cluster.local. --hairpin-mode promiscuous-bridge --network-plugin=cni"
