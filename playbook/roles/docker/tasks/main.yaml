@@ -1,20 +1,26 @@
-- name: Install yum-utils before installing docker
-  yum: name=yum-utils state=latest
-
-- name: Add repository of yum for docker
-  command: "yum-config-manager --add-repo  https://download.docker.com/linux/centos/docker-ce.repo"
-
-- name: Update repository of yum for docker
-  command: "yum makecache fast"
-
-- name: Install docker-ce
-  yum: name=docker-ce state=latest
+- name: Create the docker group
+  group: name=docker gid=993
 
 - name: Create the operation group
-  group: name=operation
+  group: name=operation gid=1000
 
 - name: Create the deployer user
   user: user=deployer group=operation groups=docker
+
+- name: Copy docker file to all the node
+  copy: src={{ docker_binary_dir }}/{{ item }} dest=/usr/bin/{{ item }} owner=root group=operation mode=0755
+  with_items:
+  - docker
+  - docker-containerd
+  - docker-containerd-ctr
+  - docker-containerd-shim
+  - dockerd
+  - docker-init
+  - docker-proxy
+  - docker-runc
+
+- name: Copy docker service file
+  copy: src=docker.service dest=/usr/lib/systemd/system/docker.service
 
 - name: Create docker configuration directory
   file: name=/etc/docker/certs.d/{{ docker_domain }} owner=root group=root state=directory recurse=true
@@ -24,9 +30,6 @@
 
 - name: Copy the ca files for docker
   copy: src=ca.crt dest=/etc/docker/certs.d/{{ docker_domain }}/ca.crt mode=0644
-
-- name: Bridge docker and flannel
-  script: "update_docker.sh"
 
 - name: Reload docker service
   command: systemctl daemon-reload

@@ -13,12 +13,6 @@
 - name: Copy the kubelet bootstrapping kubeconfig
   copy: src={{ ca_source_dir }}/bootstrap.kubeconfig dest=/etc/kubernetes/bootstrap.kubeconfig
 
-- name: Copy kube-proxy kubeconfig file
-  copy: src={{ ca_source_dir }}/kube-proxy.kubeconfig dest=/etc/kubernetes/kube-proxy.kubeconfig
-
-- name: Copy kubelet kubeconfig file
-  copy: src={{ ca_source_dir }}/bootstrap.kubeconfig dest=/etc/kubernetes/bootstrap.kubeconfig
-
 - name: Create kubernetes configuration file for kubernetes
   template: src=config.j2 dest=/etc/kubernetes/config
 

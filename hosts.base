@@ -73,13 +73,13 @@ ETCD_ENDPOINTS="https://10.0.0.12:2379,https://10.0.0.13:2379,https://10.0.0.14:
 
 binary_dir="/usr/local/kubernetes/kubernetes"
 
-ca_source_dir="/work/deployer/kubernetes/security"
+ca_source_dir="/work/deploy/kubernetes/security"
 kube_ca_dir="/etc/kubernetes/ca"
 etcd_ca_dir="/etc/etcd/ca"
-
+docker_binary_dir="/usr/local/docker"
 docker_domain="docker.macrame.com"
 
-ansible_dir="/work/deployer/ansible/playbook"
+ansible_dir="/work/deploy/ansible/playbook"
 
 
-POD_INFRA_CONTAINER_IMAGE=docker.macrame.com/google_containers/pause-amd64:3.0
+POD_INFRA_CONTAINER_IMAGE=docker.macrame.com/google_containers/pause-amd64:3.1
