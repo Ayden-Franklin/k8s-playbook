@@ -8,11 +8,7 @@ Requires=kube-apiserver.service
 Type=simple
 EnvironmentFile=-/etc/kubernetes/config
 EnvironmentFile=-/etc/kubernetes/controller-manager
-ExecStart=/usr/bin/kube-controller-manager \
-        $KUBE_LOGTOSTDERR \
-        $KUBE_LOG_LEVEL \
-        $KUBE_MASTER \
-        $KUBE_CONTROLLER_MANAGER_ARGS
+ExecStart=/usr/bin/kube-controller-manager  $KUBE_LOGTOSTDERR $KUBE_LOG_LEVEL  $KUBE_MASTER  $KUBE_CONTROLLER_MANAGER_ARGS
 Restart=always
 LimitNOFILE=65536
 

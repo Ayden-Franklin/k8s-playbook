@@ -2,6 +2,7 @@
 # kubernetes proxy config
 
 # defaults from config and proxy should be adequate
-
+## You may leave this blank to use the actual hostname
+KUBELET_HOSTNAME="--hostname-override={{ NODE_IP }}"
 # Add your own!
-KUBE_PROXY_ARGS="--kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig  --cluster-cidr={{ POD_CLUSTER_IP }}"
+KUBE_PROXY_ARGS="--kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig  --cluster-cidr={{ POD_CLUSTER_IP }} --proxy-mode=ipvs --masquerade-all=true"

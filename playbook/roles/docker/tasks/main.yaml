@@ -11,13 +11,13 @@
   copy: src={{ docker_binary_dir }}/{{ item }} dest=/usr/bin/{{ item }} owner=root group=operation mode=0755
   with_items:
   - docker
-  - docker-containerd
-  - docker-containerd-ctr
-  - docker-containerd-shim
+  - containerd
+  - ctr
+  - containerd-shim
   - dockerd
   - docker-init
   - docker-proxy
-  - docker-runc
+  - runc
 
 - name: Copy docker service file
   copy: src=docker.service dest=/usr/lib/systemd/system/docker.service

@@ -22,9 +22,6 @@
 - name: Install bind-utils
   yum: name=bind-utils state=latest
 
-- name: Install nfs-utils
-  yum: name=nfs-utils state=latest
-
 - name: Install bridge-utils
   yum: name=bridge-utils state=latest
 
